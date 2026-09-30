@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Keamanan dan Kerahasiaan Rekam Medis — Paparan Ringkas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#101e2b;--ink-2:#16283a;--ink-3:#1c3348;--paper:#eceee7;--teal:#3d9484;--teal-soft:#8fc2b6;--amber:#d3922f;--line:rgba(236,238,231,.14);--line-2:rgba(236,238,231,.22);--text:#e8eae2;--text-dim:#93a2a1;--serif:'Source Serif 4',Georgia,serif;--sans:'IBM Plex Sans',-apple-system,sans-serif;--mono:'IBM Plex Mono','Courier New',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:var(--ink);color:var(--text);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased;}
+#bg-network{position:fixed;inset:0;z-index:0;pointer-events:none;}
+#bg-network canvas{display:block;width:100%;height:100%;}
+.stage{position:relative;z-index:1;width:100vw;height:100vh;overflow:hidden;perspective:1900px;background:radial-gradient(1200px 600px at 85% -10%,rgba(61,148,132,.16),transparent 60%),radial-gradient(900px 480px at 6% 108%,rgba(211,146,47,.07),transparent 55%),rgba(16,30,43,.86);}
+.slides{position:relative;width:100%;height:100%;transform-style:preserve-3d;}
+.slide{position:absolute;inset:0;width:100%;height:100%;overflow-y:auto;display:flex;flex-direction:column;padding:clamp(20px,4vw,52px) clamp(20px,6.5vw,84px) clamp(70px,9vh,96px);transition:transform .68s cubic-bezier(.64,0,.34,1),opacity .5s ease;backface-visibility:hidden;will-change:transform,opacity;}
+.slide::-webkit-scrollbar{width:0;height:0;}
+.deckhead{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:clamp(14px,2.4vh,26px);border-bottom:1px solid var(--line);margin-bottom:clamp(20px,3.4vh,40px);flex-shrink:0;}
+.deckhead .mark,.deckhead .idx{font-family:var(--mono);font-size:12.5px;letter-spacing:.02em;}
+.deckhead .mark{color:var(--teal-soft);}
+.deckhead .idx{color:var(--text-dim);}
+h1{font-family:var(--serif);font-weight:600;line-height:1.04;font-size:clamp(34px,5.6vw,64px);color:var(--paper);letter-spacing:-.01em;}
+h2.kicker{font-weight:500;font-size:clamp(14px,1.5vw,17px);color:var(--teal-soft);margin-top:8px;margin-bottom:clamp(18px,3vh,30px);}
+p.lead{font-family:var(--serif);font-size:clamp(17px,1.75vw,21px);line-height:1.55;color:var(--paper);max-width:62ch;}
+.cite{font-family:var(--mono);font-size:.62em;color:var(--amber);font-weight:500;margin-left:1px;}
+
+.s1-body{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(24px,4vw,56px);margin-top:clamp(20px,3.6vh,36px);flex:1 1 auto;}
+.concept-card{background:var(--paper);color:var(--ink);border-radius:2px;padding:clamp(18px,2.2vw,26px) clamp(20px,2.4vw,28px);align-self:start;box-shadow:0 24px 48px -20px rgba(0,0,0,.55);transition:transform .25s ease-out,box-shadow .25s ease-out;will-change:transform;}
+.concept-card .label{font-size:12px;color:#4b5a58;margin-bottom:14px;}
+.concept-card .code{font-family:var(--mono);font-size:clamp(20px,2.2vw,26px);color:var(--teal);font-weight:500;}
+.concept-card .term{font-family:var(--serif);font-size:clamp(17px,1.7vw,20px);margin-top:6px;}
+.concept-card .rel{margin-top:16px;padding-top:14px;border-top:1px solid rgba(16,30,43,.14);font-size:13px;line-height:1.75;color:#3c4a48;}
+.concept-card .rel b{color:var(--ink);font-family:var(--mono);font-weight:600;}
+.concept-card .note{margin-top:14px;font-size:13px;line-height:1.5;color:#57635f;}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2.4vw,24px);margin-top:8px;}
+.fact{border-top:1px solid var(--line-2);padding-top:12px;}
+.fact .num{font-family:var(--serif);font-size:clamp(24px,2.4vw,30px);color:var(--paper);display:block;}
+.fact .desc{font-size:14.5px;color:var(--text-dim);line-height:1.5;margin-top:3px;max-width:44ch;display:block;}
+.origin-line{margin-top:auto;padding-top:16px;font-size:14px;color:var(--text-dim);line-height:1.6;max-width:52ch;}
+
+.s2-grid{display:grid;grid-template-columns:repeat(3,1fr);margin-top:clamp(16px,3vh,28px);border-top:1px solid var(--line-2);}
+.country{padding:clamp(16px,2vw,24px) clamp(16px,2vw,22px) 8px;border-right:1px solid var(--line);}
+.country:last-child{border-right:none;}
+.country .flagtag{font-family:var(--mono);font-size:11.5px;color:var(--amber);margin-bottom:6px;}
+.country h3{font-family:var(--serif);font-weight:600;font-size:clamp(19px,1.9vw,23px);color:var(--paper);margin-bottom:12px;}
+.country ul{list-style:none;}
+.country li{font-size:14px;line-height:1.55;color:var(--text-dim);margin-bottom:12px;padding-left:14px;position:relative;}
+.country li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--teal-soft);}
+.synthesis{margin-top:clamp(14px,2.4vh,22px);background:linear-gradient(180deg,var(--ink-2),var(--ink-3));border:1px solid var(--line-2);border-radius:2px;padding:clamp(16px,2vw,22px) clamp(18px,2.2vw,26px);}
+.synthesis .tag{font-family:var(--mono);font-size:11.5px;color:var(--teal-soft);margin-bottom:8px;}
+.synthesis p{font-family:var(--serif);font-size:clamp(15px,1.4vw,17.5px);line-height:1.6;color:var(--paper);max-width:100ch;}
+
+.s3-layout{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(28px,4vw,60px);margin-top:clamp(16px,3vh,30px);flex:1 1 auto;}
+.timeline{position:relative;padding-left:28px;}
+.timeline::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:1px;background:var(--line-2);}
+.tl-item{position:relative;padding-bottom:clamp(16px,2.6vh,26px);}
+.tl-item::before{content:attr(data-n);position:absolute;left:-28px;top:-1px;width:19px;height:19px;border-radius:50%;background:var(--ink);border:1px solid var(--teal-soft);color:var(--teal-soft);font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;}
+.tl-item .when{font-family:var(--mono);font-size:12.5px;color:var(--amber);margin-bottom:4px;}
+.tl-item .what{font-size:14.5px;line-height:1.55;color:var(--text-dim);max-width:54ch;}
+.tl-item .what b{color:var(--paper);font-weight:600;}
+.side-boxes{display:flex;flex-direction:column;gap:clamp(14px,2vh,18px);}
+.box{padding:clamp(14px,1.8vw,20px);border-radius:2px;}
+.box.challenge{background:rgba(211,146,47,.08);border:1px solid rgba(211,146,47,.28);}
+.box.opportunity{background:rgba(61,148,132,.12);border:1px solid rgba(61,148,132,.35);}
+.box .tag{font-family:var(--mono);font-size:11px;margin-bottom:8px;}
+.box.challenge .tag{color:var(--amber);}
+.box.opportunity .tag{color:var(--teal-soft);}
+.box p{font-size:14px;line-height:1.6;color:var(--paper);}
+
+.sources{margin-top:clamp(18px,2.6vh,26px);padding-top:14px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 22px;flex-shrink:0;}
+.sources span{font-size:11.5px;line-height:1.5;color:var(--text-dim);max-width:46ch;}
+.sources span b{font-family:var(--mono);color:var(--amber);font-weight:500;margin-right:3px;}
+
+.controls{position:fixed;left:0;right:0;bottom:0;height:64px;display:flex;align-items:center;justify-content:center;gap:22px;background:linear-gradient(0deg,var(--ink) 40%,transparent);z-index:20;}
+.navbtn{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-2);background:rgba(236,238,231,.03);color:var(--paper);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,border-color .2s;}
+.navbtn:hover{background:rgba(236,238,231,.08);border-color:var(--teal-soft);}
+.navbtn:disabled{opacity:.25;cursor:default;}
+.navbtn svg{width:15px;height:15px;}
+.dots{display:flex;gap:9px;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--line-2);cursor:pointer;transition:background .2s,transform .2s;}
+.dot.active{background:var(--teal-soft);transform:scale(1.25);}
+.question-wrap{flex:1 1 auto;display:flex;align-items:center;justify-content:center;}
+.question-text{font-family:var(--serif);font-weight:500;font-size:clamp(28px,4.4vw,54px);line-height:1.28;color:var(--paper);max-width:24ch;text-align:center;letter-spacing:-.01em;}
+
+.pts{list-style:none;display:flex;flex-direction:column;gap:clamp(10px,1.8vh,16px);}
+.pts li{position:relative;padding-left:18px;font-family:var(--serif);font-size:clamp(16px,1.6vw,20px);line-height:1.4;color:var(--paper);}
+.pts li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--teal-soft);}
+.pts.sm{gap:6px;}.pts.sm li{font-family:var(--sans);font-size:14px;}
+.synthesis .pts{margin-top:2px;}
+.dg{width:100%;max-width:940px;margin:0 auto;display:block;}
+.dg .lb{font:500 11px var(--mono);fill:var(--amber);}
+.dg .bx{fill:rgba(236,238,231,.04);stroke:var(--line-2);}
+.dg .hl{fill:rgba(61,148,132,.12);stroke:var(--teal-soft);}
+.dg .wn{fill:rgba(211,146,47,.08);stroke:rgba(211,146,47,.4);}
+.dg .bt{font:600 14px var(--sans);fill:var(--paper);}
+.dg .bd{font:12px var(--sans);fill:var(--text-dim);}
+.dg .bd2{font:500 12px var(--sans);fill:var(--paper);}
+.dg .wt{font:500 11.5px var(--sans);fill:var(--amber);}
+@media (max-width:760px){.s1-body,.s3-layout,.s2-grid,.facts{grid-template-columns:1fr;}.country{border-right:none;border-bottom:1px solid var(--line);padding-bottom:16px;}h1{font-size:clamp(28px,8vw,40px);}}
+@media (prefers-reduced-motion:reduce){.slide{transition:opacity .3s ease;}.concept-card{transition:none;}}
+</style>
+</head>
+<body>
+
+<div id="bg-network" aria-hidden="true"></div>
+
+<div class="stage">
+  <div class="slides" id="slides">
+
+    <section class="slide">
+      <div class="deckhead"><span class="mark">Keamanan &amp; Kerahasiaan RM — Paparan Ringkas</span><span class="idx">1 / 5</span></div>
+      <h1>Keamanan dan Kerahasiaan Rekam Medis</h1>
+      <h2 class="kicker">Kebijakan rumah sakit dan penerapannya</h2>
+      <div class="s1-body">
+        <ul class="pts">
+          <li>Rekam medis: identitas, pemeriksaan, pengobatan, tindakan pasien<span class="cite">[1]</span></li>
+          <li>Wajib dijamin: keamanan, kerahasiaan, keutuhan, ketersediaan<span class="cite">[1]</span></li>
+          <li>Rahasia tetap berlaku walau pasien meninggal<span class="cite">[1]</span></li>
+          <li>Fasyankes bertanggung jawab atas kehilangan, pemalsuan, dan penggunaan tanpa hak<span class="cite">[1]</span></li>
+        </ul>
+        <div class="concept-card">
+          <div class="label">Prinsip keamanan data RME (Pasal 29)</div>
+          <div class="code">C · I · A</div>
+          <div class="term">Confidentiality, Integrity, Availability</div>
+          <div class="rel"><b>Kerahasiaan</b> → hanya yang berhak<br><b>Integritas</b> → akurat, diubah oleh yang berhak<br><b>Ketersediaan</b> → dapat diakses saat dibutuhkan</div>
+        </div>
+      </div>
+      <div class="facts">
+        <div class="fact"><span class="num">25 tahun</span><span class="desc">masa simpan minimal<span class="cite">[1]</span></span></div>
+        <div class="fact"><span class="num">2 × 24 jam</span><span class="desc">batas perbaikan data<span class="cite">[1]</span></span></div>
+        <div class="fact"><span class="num">3 hak akses</span><span class="desc">input · perbaikan · lihat<span class="cite">[1]</span></span></div>
+      </div>
+      <div class="sources"><span><b>[1]</b>Permenkes No. 24 Tahun 2022 tentang Rekam Medis, Pasal 1, 2, 25, 29, 30, 32, 39 (jdih.kemkes.go.id).</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="deckhead"><span class="mark">Keamanan &amp; Kerahasiaan RM — Paparan Ringkas</span><span class="idx">2 / 5</span></div>
+      <h1>Landasan Hukum dan Kebijakan</h1>
+      <h2 class="kicker">Tiga lapis aturan rujukan kebijakan rumah sakit</h2>
+      <div class="s2-grid"><div class="country"><div class="flagtag">UU No. 17 Tahun 2023</div><h3>Kewajiban tenaga &amp; pimpinan</h3><ul><li>Dijaga tenaga medis, nakes, pimpinan fasyankes (Ps. 296 ayat 5)<span class="cite">[1]</span></li><li>Pasien berhak akses informasi RM (Ps. 276 huruf e, 297 ayat 2)<span class="cite">[2]</span></li></ul></div><div class="country"><div class="flagtag">Permenkes No. 24 Tahun 2022</div><h3>Aturan teknis RM</h3><ul><li>Tujuan: keamanan, kerahasiaan, keutuhan, ketersediaan (Ps. 2)<span class="cite">[3]</span></li><li>Fasyankes bertanggung jawab atas penyalahgunaan (Ps. 25)<span class="cite">[3]</span></li><li>Wajib SPO penyelenggaraan RME (Ps. 7)<span class="cite">[3]</span></li></ul></div><div class="country"><div class="flagtag">UU No. 27 Tahun 2022</div><h3>Pelindungan data pribadi</h3><ul><li>Data kesehatan = data pribadi spesifik (Ps. 4 ayat 2)<span class="cite">[4]</span></li><li>RME terhubung platform Kemenkes (Ps. 21, 28)<span class="cite">[3]</span></li></ul></div></div>
+      <div class="synthesis"><div class="tag">Bentuk kebijakan di rumah sakit</div>
+        <ul class="pts sm"><li>SPO penyelenggaraan RME<span class="cite">[3]</span></li><li>Kebijakan hak akses yang ditetapkan pimpinan<span class="cite">[3]</span></li></ul></div>
+      <div class="sources"><span><b>[1]</b>UU No. 17 Tahun 2023 tentang Kesehatan, Pasal 296 ayat (5), dikutip Jurnal Untag Semarang.</span><span><b>[2]</b>Hukumonline, "Hak Pasien dan Keluarganya atas Rekam Medis."</span><span><b>[3]</b>Permenkes No. 24 Tahun 2022, Pasal 2, 7, 21, 25, 28, 30.</span><span><b>[4]</b>UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi, Pasal 4 ayat (2).</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="deckhead"><span class="mark">Keamanan &amp; Kerahasiaan RM — Paparan Ringkas</span><span class="idx">3 / 5</span></div>
+      <h1>Siapa Terikat, dan Kapan Boleh Dibuka</h1>
+      <h2 class="kicker">Kerahasiaan bukan berarti tertutup mutlak</h2>
+      <div class="s3-layout">
+        <div class="timeline">
+          <div class="tl-item" data-n="1"><div class="when">Permintaan</div><div class="what">Tertulis/elektronik · terbatas sesuai kebutuhan<span class="cite">[1]</span></div></div>
+          <div class="tl-item" data-n="2"><div class="when">Dengan persetujuan pasien</div><div class="what">Jalur utama<span class="cite">[1]</span></div></div>
+          <div class="tl-item" data-n="3"><div class="when">Tanpa persetujuan pasien</div><div class="what">Hukum · etik/disiplin · audit medis · wabah/bencana · pendidikan/penelitian · keselamatan orang lain<br><b>Wajib persetujuan Menteri</b><span class="cite">[1]</span></div></div>
+          <div class="tl-item" data-n="4"><div class="when">Pengecualian</div><div class="what">Wabah &amp; ancaman keselamatan: identitas pasien boleh dibuka ke institusi berwenang<span class="cite">[1]</span></div></div>
+        </div>
+        <div class="side-boxes">
+          <div class="box challenge"><div class="tag">Wajib menjaga</div><ul class="pts sm"><li>Nakes pemberi layanan</li><li>Pimpinan fasyankes</li><li>Tenaga pembiayaan</li><li>Mahasiswa/siswa bertugas</li><li>Pihak lain dengan akses<span class="cite">[1]</span></li></ul></div>
+          <div class="box opportunity"><div class="tag">Pelepasan hak rahasia</div><ul class="pts sm"><li>Dibuka ke media massa oleh pasien/keluarga → RS berhak menjawab<span class="cite">[1]</span></li></ul></div>
+        </div>
+      </div>
+      <div class="sources"><span><b>[1]</b>Permenkes No. 24 Tahun 2022, Pasal 32, 33, 35, 36, 37, 38 (jdih.kemkes.go.id).</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="deckhead"><span class="mark">Keamanan &amp; Kerahasiaan RM — Paparan Ringkas</span><span class="idx">4 / 5</span></div>
+      <h1>Penerapan di Rumah Sakit</h1>
+      <h2 class="kicker">Tiga area kendali yang diatur dan biasa diaudit</h2>
+      <div class="s2-grid"><div class="country"><div class="flagtag">Kerahasiaan</div><h3>Kontrol hak akses</h3><ul><li>3 hak: input, perbaikan, lihat<span class="cite">[1]</span></li><li>Diatur pimpinan dalam SPO<span class="cite">[1]</span></li><li>Lihat data: internal, untuk pelayanan/administrasi<span class="cite">[1]</span></li></ul></div><div class="country"><div class="flagtag">Integritas</div><h3>Perbaikan &amp; keaslian data</h3><ul><li>Perbaikan ≤ 2 × 24 jam<span class="cite">[1]</span></li><li>Lewat tenggat: persetujuan PMIK/pimpinan<span class="cite">[1]</span></li><li>Tanda tangan elektronik untuk verifikasi<span class="cite">[1]</span></li></ul></div><div class="country"><div class="flagtag">Ketersediaan</div><h3>Penyimpanan &amp; tata kelola</h3><ul><li>Simpan ≥ 25 tahun<span class="cite">[1]</span></li><li>Pihak ketiga: penyimpanan di dalam negeri<span class="cite">[1]</span></li><li>Audit mutu berkala oleh tim reviu<span class="cite">[1]</span></li></ul></div></div>
+      <div class="synthesis"><div class="tag">Temuan lapangan &amp; peran PMIK</div>
+        <ul class="pts sm"><li>RS Pertamina Cirebon: ketersediaan terpenuhi; kerahasiaan &amp; integritas belum<span class="cite">[2]</span></li><li>PMIK berwenang input, perbaikan, dan persetujuan perbaikan lewat 2 × 24 jam<span class="cite">[1]</span></li></ul></div>
+      <div class="sources"><span><b>[1]</b>Permenkes No. 24 Tahun 2022, Pasal 22, 23, 30, 31, 39 (jdih.kemkes.go.id).</span><span><b>[2]</b>Karya ilmiah Prodi RMIK, "Keamanan RME di RS Pertamina Cirebon," cakrawala.mahardika.ac.id.</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="deckhead"><span class="mark">Keamanan &amp; Kerahasiaan RM — Paparan Ringkas</span><span class="idx">5 / 5</span></div>
+      <h1 style="font-size:clamp(26px,3.6vw,44px)">Penerapan Hak Akses RME di RSUD R.T. Notopuro Sidoarjo</h1>
+      <h2 class="kicker" style="margin-bottom:clamp(10px,2vh,18px)">Perdir No. 21 Tahun 2025 tentang Penyelenggaraan Rekam Medis</h2>
+      <svg class="dg" viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="var(--teal-soft)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs><text class="lb" x="0" y="10">SIAPA BERHAK · role-based access control (peran pengguna sistem RME)</text><rect class="bx" x="0" y="20" width="110" height="32" rx="5"/><text class="bd2" x="55" y="41" text-anchor="middle">Administrasi</text><rect class="bx" x="120" y="20" width="110" height="32" rx="5"/><text class="bd2" x="175" y="41" text-anchor="middle">Dokter Spesialis</text><rect class="bx" x="240" y="20" width="110" height="32" rx="5"/><text class="bd2" x="295" y="41" text-anchor="middle">Dokter Umum</text><rect class="bx" x="360" y="20" width="110" height="32" rx="5"/><text class="bd2" x="415" y="41" text-anchor="middle">Perawat</text><rect class="bx" x="480" y="20" width="110" height="32" rx="5"/><text class="bd2" x="535" y="41" text-anchor="middle">Rekam Medis</text><rect class="bx" x="600" y="20" width="110" height="32" rx="5"/><text class="bd2" x="655" y="41" text-anchor="middle">Verifikator</text><rect class="bx" x="720" y="20" width="180" height="32" rx="5" stroke-dasharray="4 3"/><text class="wt" x="810" y="41" text-anchor="middle" font-style="italic">dan lain sebagainya</text><text class="lb" x="0" y="76">ALUR PEMBERIAN HAK AKSES</text><rect class="bx" x="0" y="86" width="192" height="100" rx="6"/><text class="bt" x="12" y="108">1 Permohonan</text><text class="bd" x="12" y="128">Nota dinas ke Kepala IRM</text><text class="bd" x="12" y="144">(akun baru / ubah / hapus)</text><line x1="194" y1="136" x2="234" y2="136" stroke="var(--line-2)" marker-end="url(#ar)"/><rect class="bx" x="236" y="86" width="192" height="100" rx="6"/><text class="bt" x="248" y="108">2 Verifikasi oleh IRM</text><text class="bd" x="248" y="128">KTP, kartu kepegawaian, STR,</text><text class="bd" x="248" y="144">sumpah RM, alasan</text><text class="wt" x="248" y="172">Data tidak konsisten → ditolak</text><line x1="430" y1="136" x2="470" y2="136" stroke="var(--line-2)" marker-end="url(#ar)"/><rect class="hl" x="472" y="86" width="192" height="100" rx="6"/><text class="bt" x="484" y="108">3 Akun aktif</text><text class="bd" x="484" y="128">Akses sesuai peran (RBAC)</text><text class="bd" x="484" y="144">Akun individu, autentikasi sah</text><line x1="666" y1="136" x2="706" y2="136" stroke="var(--line-2)" marker-end="url(#ar)"/><rect class="bx" x="708" y="86" width="192" height="100" rx="6"/><text class="bt" x="720" y="108">4 Audit trail otomatis</text><text class="bd" x="720" y="128">Waktu, identitas, perangkat,</text><text class="bd" x="720" y="144">jenis data yang diakses</text><text class="lb" x="0" y="210">PEMBATASAN KHUSUS</text><rect class="bx" x="0" y="220" width="440" height="64" rx="6"/><text class="bt" x="12" y="240">PPDS</text><text class="bd" x="12" y="258">Terbatas pada pasien yang menjadi tanggung jawab klinisnya</text><text class="bd" x="12" y="274">Supervisi DPJP · akun khusus selama masa pendidikan</text><rect class="bx" x="460" y="220" width="440" height="64" rx="6"/><text class="bt" x="472" y="240">Peneliti</text><text class="bd" x="472" y="258">Izin resmi KEPK + direktur RS · data terbatas sesuai penelitian</text><text class="bd" x="472" y="274">Akun khusus, hanya di ruang IRM, diawasi PMIK</text><text class="lb" x="0" y="308">PENGENDALIAN &amp; PENCABUTAN</text><rect class="bx" x="0" y="318" width="280" height="70" rx="6"/><text class="bt" x="12" y="340">Evaluasi berkala</text><text class="bd" x="12" y="358">Unit EHR menilai hak akses semua pengguna</text><text class="bd" x="12" y="374">Didokumentasikan di sistem RME</text><line x1="282" y1="353" x2="308" y2="353" stroke="var(--line-2)" marker-end="url(#ar)"/><rect class="hl" x="310" y="318" width="280" height="70" rx="6"/><text class="bt" x="322" y="340">Nonaktif ≤ 2 hari kerja</text><text class="bd" x="322" y="358">Setelah masa tugas/pendidikan berakhir</text><text class="bd" x="322" y="374">Dasar: data kepegawaian &amp; pendidikan</text><line x1="592" y1="353" x2="618" y2="353" stroke="var(--line-2)" marker-end="url(#ar)"/><rect class="wn" x="620" y="318" width="280" height="70" rx="6"/><text class="bt" x="632" y="340">Larangan &amp; sanksi</text><text class="bd" x="632" y="358">Dilarang akses/unduh/sebar di luar keperluan</text><text class="bd" x="632" y="374">Penyalahgunaan → sanksi administratif/hukum</text></svg>
+      <div class="sources"><span><b>[1]</b>Peraturan Direktur No. 21 Tahun 2025 tentang Penyelenggaraan Rekam Medis, bagian "Hak Akses Data RME."</span></div>
+    </section>
+
+  </div>
+
+  <div class="controls">
+    <button class="navbtn" id="prevBtn" aria-label="Slide sebelumnya">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="dots" id="dots"></div>
+    <button class="navbtn" id="nextBtn" aria-label="Slide berikutnya">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  let current = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+  const dots = document.querySelectorAll('.dot');
+
+  function render(){
+    slides.forEach((slide, i) => {
+      const offset = i - current;
+      const abs = Math.abs(offset);
+      const clamped = Math.max(-1, Math.min(1, offset));
+      const rotY = reduceMotion ? 0 : clamped * -24;
+      const tz = reduceMotion || abs === 0 ? 0 : -280;
+      slide.style.transform = `translateX(${offset * 102}%) rotateY(${rotY}deg) translateZ(${tz}px)`;
+      slide.style.opacity = abs === 0 ? '1' : '0';
+      slide.style.zIndex = String(10 - abs);
+      slide.style.pointerEvents = abs === 0 ? 'auto' : 'none';
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slides.length - 1;
+  }
+  function goTo(i){ current = Math.max(0, Math.min(slides.length - 1, i)); render(); }
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+  window.addEventListener('keydown', e => {
+    if(e.key === 'ArrowRight' || e.key === ' ') goTo(current + 1);
+    if(e.key === 'ArrowLeft') goTo(current - 1);
+  });
+  let touchX = null;
+  window.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  window.addEventListener('touchend', e => {
+    if(touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if(Math.abs(dx) > 50) goTo(current + (dx < 0 ? 1 : -1));
+    touchX = null;
+  });
+  render();
+
+  const conceptCard = document.querySelector('.concept-card');
+  if(conceptCard && !reduceMotion){
+    conceptCard.addEventListener('mousemove', e => {
+      const r = conceptCard.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      conceptCard.style.transform = `perspective(700px) rotateX(${(-py * 8).toFixed(2)}deg) rotateY(${(px * 10).toFixed(2)}deg) translateZ(6px)`;
+    });
+    conceptCard.addEventListener('mouseleave', () => { conceptCard.style.transform = ''; });
+  }
+
+  (function initNetworkBG(){
+    const mount = document.getElementById('bg-network');
+    if(!mount || typeof THREE === 'undefined') return;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.z = 11;
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    mount.appendChild(renderer.domElement);
+
+    const NODE_COUNT = 70, RADIUS = 6.4, CONNECT_DIST = 2.6;
+    const positions = [];
+    const group = new THREE.Group();
+    const tealColor = new THREE.Color(0x8fc2b6);
+    const amberColor = new THREE.Color(0xd3922f);
+
+    for(let i = 0; i < NODE_COUNT; i++){
+      const r = RADIUS * Math.cbrt(Math.random());
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const v = new THREE.Vector3(r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta), r * Math.cos(phi));
+      positions.push(v);
+      const isHub = i % 9 === 0;
+      const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(isHub ? 0.06 : 0.035, 8, 8),
+        new THREE.MeshBasicMaterial({ color: isHub ? amberColor : tealColor, transparent: true, opacity: isHub ? 0.85 : 0.5 })
+      );
+      mesh.position.copy(v);
+      group.add(mesh);
+    }
+    const linePositions = [];
+    for(let i = 0; i < positions.length; i++){
+      for(let j = i + 1; j < positions.length; j++){
+        if(positions[i].distanceTo(positions[j]) < CONNECT_DIST){
+          linePositions.push(positions[i].x, positions[i].y, positions[i].z, positions[j].x, positions[j].y, positions[j].z);
+        }
+      }
+    }
+    const lineGeo = new THREE.BufferGeometry();
+    lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+    const lineMat = new THREE.LineBasicMaterial({ color: tealColor, transparent: true, opacity: 0.14 });
+    group.add(new THREE.LineSegments(lineGeo, lineMat));
+    scene.add(group);
+
+    let targetRotX = 0, targetRotY = 0;
+    window.addEventListener('pointermove', e => {
+      targetRotY = (e.clientX / window.innerWidth - 0.5) * 0.35;
+      targetRotX = (e.clientY / window.innerHeight - 0.5) * 0.2;
+    });
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    if(reduceMotion){ renderer.render(scene, camera); return; }
+
+    let autoRotY = 0, parallaxX = 0, parallaxY = 0;
+    (function animate(){
+      requestAnimationFrame(animate);
+      autoRotY += 0.0011;
+      parallaxX += (targetRotX - parallaxX) * 0.03;
+      parallaxY += (targetRotY - parallaxY) * 0.03;
+      group.rotation.y = autoRotY + parallaxY;
+      group.rotation.x = parallaxX;
+      lineMat.opacity = 0.12 + Math.sin(performance.now() * 0.0007) * 0.04;
+      renderer.render(scene, camera);
+    })();
+  })();
+</script>
+</body>
+</html>
